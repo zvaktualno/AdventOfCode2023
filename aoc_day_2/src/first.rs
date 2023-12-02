@@ -2,8 +2,9 @@ use std::collections::HashMap;
 
 pub fn solve(lines: &Vec<String>) {
     let mut res: i32 = 0;
-    let colors = HashMap::from([
 
+    // Using multiple values to avoid parsing ',', ';'...
+    let colors = HashMap::from([
         ("blue", 0),
         ("red", 1),
         ("green", 2),

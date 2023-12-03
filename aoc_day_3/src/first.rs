@@ -1,5 +1,5 @@
 fn is_number(c: char) -> bool {
-    if (c >= '0' && c <= '9'){
+    if c >= '0' && c <= '9'{
         return true;
     }
     return false;

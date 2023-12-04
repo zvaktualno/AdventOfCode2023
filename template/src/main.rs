@@ -13,7 +13,7 @@ fn read_lines(filename: &str) -> Vec<String> {
 }
 
 fn main() {
-    let filepath: &str = "test.txt";
+    let filepath: &str = "test1.txt";
 
     let lines = read_lines(filepath);
     first::solve(&lines);

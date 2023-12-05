@@ -26,29 +26,32 @@ fn map_range(ranges: &Vec<(u64, u64)>, map: &Vec<(u64, u64, u64)>) -> Vec<(u64, 
                     // If range is not found, search for a subset 
                     let range = map.iter().find(|x| (e >= x.1) && (e<=(x.1+x.2-1)));
                     match range {
-                        // If new range is found, copy the subset and change start
-                        Some(x) => {new_ranges.push((s,x.1-1));s = x.1;continue;},
-                        //If range still isn't found, copy subset
-                        _ => {new_ranges.push(range_not_found); break;}
+                        Some(x) => {new_ranges.push((s,x.1-1));s = x.1;println!("Found new."); continue;},
+                        //If range still isn't found, copy 
+                        _ => {new_ranges.push(range_not_found);println!("Copied {} to {}, {} to {}", range_not_found.0, range_not_found.0, range_not_found.1, range_not_found.1); break;}
                     };
                 },
             };
 
             let range_end = range.1 + range.2 - 1;
             // If whole range translates
+            println!("{e} {range_end}");
             if e <= range_end
             {
                 let new_s = map_value(s, range);
                 let new_e: u64 = map_value(e, range);
+                println!("Mapped {s} to {new_s}, {e} to {new_e}");
                 new_ranges.push((new_s, new_e));
                 break;
             }
             else if e > range_end {
                 let new_s: u64 = map_value(s, range);
                 let new_e: u64 = map_value(range_end, range);
+                println!("Mapped partially {s} to {new_s}, {range_end} to {new_e}");
                 new_ranges.push((new_s, new_e));
                 // Find the next range
                 s = range_end + 1;
+                println!("Setting new start {s}");
             }
         }
     }
@@ -56,6 +59,8 @@ fn map_range(ranges: &Vec<(u64, u64)>, map: &Vec<(u64, u64, u64)>) -> Vec<(u64, 
 }
 
 pub fn solve(lines: &Vec<String>) {
+    let mut res: u64 = 0;
+
     let seeds  = &lines[0].split(" ").collect::<Vec<&str>>();
     let seeds_len = seeds.len();
     let seeds = seeds[1..seeds_len].iter().map(|x| x.parse::<u64>().unwrap()).collect::<Vec<u64>>();
@@ -85,8 +90,16 @@ pub fn solve(lines: &Vec<String>) {
     }
 
     for map in &maps{
+        for s in &new_seeds{
+            print!("({} {}), ", s.0, s.1);
+        }
+        println!("");
         new_seeds = map_range(&new_seeds, &map);
+        println!("");
     }
 
     println!("Part two result {}", new_seeds.iter().min_by_key(|x| x.0).unwrap().0);
+    for s in &new_seeds{
+        print!("({} {}), ", s.0, s.1);
+    }
 }

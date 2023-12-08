@@ -1,8 +1,8 @@
-
+#[derive(Clone)]
 pub struct Hand {
-    cards: Vec<char>,
+    pub cards: Vec<char>,
     pub bid: u32,
-    vals: Vec<char>,
+    pub vals: Vec<char>,
 }
 
 fn check_five_of_a_kind(cards: &Vec<char>) -> Option<char>{
@@ -148,7 +148,9 @@ impl Hand {
             for cidx in 0..self.cards.len(){
                 if self.cards[cidx] != other.cards[cidx]{
                     // If smaller index, then it wins
-                    return self.vals.iter().position(|x| *x == self.cards[cidx]).unwrap() < self.vals.iter().position(|x| *x == other.cards[cidx]).unwrap();
+                    let a = self.vals.iter().position(|x| *x == self.cards[cidx]).unwrap();
+                    let b = self.vals.iter().position(|x| *x == other.cards[cidx]).unwrap();
+                    return a<b;
                 }
             }
         }

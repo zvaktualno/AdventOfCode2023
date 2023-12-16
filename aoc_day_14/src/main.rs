@@ -13,7 +13,7 @@ fn read_lines(filename: &str) -> Vec<String> {
 }
 
 fn main() {
-    let filepath: &str = "test1.txt";
+    let filepath: &str = "in.txt";
     use std::time::Instant;
 
     let lines = read_lines(filepath);

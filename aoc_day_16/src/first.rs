@@ -71,39 +71,38 @@ fn get(field: &Vec<Vec<char>>, score: &mut Vec<Vec<u8>>, position: &Point, prev_
     let mut points = next(field, &position, &prev_position);
     let field_size = Point {x: field[0].len() as i32, y: field.len() as i32};
 
-    points = points.into_iter().filter(|(point, _dir)| point_valid(point, &field_size)).collect();
-                
-    'outer: for (point, dir) in points{
-        if score[point.y as usize][point.x as usize] & dir > 0{
-            continue;
+    for (_, dir) in &points{
+        if score[position.y as usize][position.x as usize] & dir > 0{
+            return;
         }
         score[position.y as usize][position.x as usize] |= dir;
+    }   
+    points = points.into_iter().filter(|(point, _dir)| point_valid(point, &field_size)).collect();
+    
+    'outer: for (point, dir) in points{
 
-        let mut prev_starting_point = position.clone();
-        let mut starting_point = point;
+        
+        let mut prev_possible_point = position.clone();
+        let mut possible_point = point;
         
         loop {
-            if !point_valid(&starting_point, &field_size){
+            score[prev_possible_point.y as usize][prev_possible_point.x as usize] |= dir;
+            if !point_valid(&possible_point, &field_size){
                 continue 'outer;
             }
-
-            let ch: char = field[starting_point.y as usize][starting_point.x as usize];
-            if ch == '.' || ch == '|' || ch == '-'{
-                let (np, ndir) = next(field, &starting_point, &prev_starting_point)[0].clone();
-                if ndir != dir{
-                    break;
-                }
-                score[starting_point.y as usize][starting_point.x as usize] |= dir;
-                prev_starting_point = starting_point;
-                starting_point = np;
+            // If next point is a dot
+            if field[possible_point.y as usize][possible_point.x as usize] == '.'{
+                let (np, d) = next(field, &possible_point, &prev_possible_point)[0].clone();
+                prev_possible_point = possible_point;
+                possible_point = np;
+                score[prev_possible_point.y as usize][prev_possible_point.x as usize] |= d;
             }
             else {
                 break;
             }
         }
-        
-        get(field, score, &starting_point, &position, deep+1);
-        
+        get(field, score, &possible_point, &prev_possible_point, deep+1);
+       
     }
 }
 
@@ -119,12 +118,12 @@ pub fn solve(lines: &Vec<String>) {
     for i in field_bool{
         for a in i{
             match a {
-                DOWN => {print!("v ");},
-                UP => {print!("^ ");},
-                LEFT => {print!("< ");},
-                RIGHT => {print!("> ");},
-                0 => print!(". "),
-                x => print!("{x} "),
+                DOWN => {print!(" v ");},
+                UP => {print!(" ^ ");},
+                LEFT => {print!(" < ");},
+                RIGHT => {print!(" > ");},
+                0 => print!(" . "),
+                x => print!("{x:#2} "),
             }
         }
         println!("");

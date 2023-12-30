@@ -2,10 +2,11 @@ use std::collections::HashMap;
 
 #[path = "./workflows.rs"]
 mod workflows;
+use workflows::Workflow;
 
 pub fn solve(lines: &Vec<String>) {
     let mut res: u32 = 0;
-    let mut workflows: Vec<workflows::Workflow> = vec![];
+    let mut workflows: Vec<Workflow> = vec![];
     let mut empty_line_detected = false;
     let mut vals: Vec<HashMap<char, u32>> = vec![];
 
@@ -15,7 +16,7 @@ pub fn solve(lines: &Vec<String>) {
             continue;
         }
         if empty_line_detected.eq(&false){
-            workflows.push(workflows::Workflow::new(line));
+            workflows.push(Workflow::new(line));
         }
         else {
             let parsed_line = line.replace("}", "");
@@ -36,7 +37,7 @@ pub fn solve(lines: &Vec<String>) {
         loop {
             let workflow = workflows.iter().find(|workflow| workflow.name.eq(&wf)).unwrap();
             wf = workflow.process(v);
-            println!("{wf} {v:?}");
+            //println!("{wf} {v:?}");
             if wf.eq("A"){
                 res += v.keys().map(|k| v.get(k).unwrap()).sum::<u32>();
                 break;

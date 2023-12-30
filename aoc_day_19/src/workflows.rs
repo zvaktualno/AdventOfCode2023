@@ -35,7 +35,7 @@ impl Workflow {
             }
         }
         let wf: Workflow = Workflow { name: line[0..ws_start-1].to_string(), conditions: conditions, default: string_conditions.last().unwrap().to_string() };
-        println!("Creating a workflow '{}' ", wf.name);
+        //println!("Creating a workflow '{}' ", wf.name);
         return wf;
     }
 
@@ -54,4 +54,5 @@ impl Workflow {
         }
         return self.default.clone();
     }
+
 }
